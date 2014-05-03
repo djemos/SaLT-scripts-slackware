@@ -44,7 +44,7 @@ III/ Create an ISO
     You must now decide which packages you want to include in your ISO.
     You must also arganize your packages in collections (modules).
     Be carefull to put any package that depends directly on the kernel version in a separate
-    module, together with the kernelive package.
+    module.
     The last module will contains a special package, named liveenv, which deals with configuring
     a live system.
 
