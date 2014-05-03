@@ -27,6 +27,8 @@ II/ Minimum requirements
    - perl
    - imagemagick
    - cdrtools
+   - slackware-live
+   - unionfs-fuse
   Optional:
    - xcf2png (if you provide a background image in XCF format)
 
