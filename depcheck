@@ -1,0 +1,133 @@
+#!/usr/bin/env python
+# vim: set syn=python noet ai sw=2 st=2 ts=2 tw=0:
+
+import sys
+import os
+import sys
+import getopt
+import string
+import urllib2
+import subprocess
+import glob
+
+write = sys.stdout.write
+HILIGHTCOLOR = '\033[1;31m'
+ENDCOLOR = '\033[0m'
+
+def main(argv):
+	try:
+		opts, args = getopt.getopt(argv, "hf:u:n", ["help",
+			"file=", "url=", "no-color"])
+	except getopt.GetoptError:
+		usage()
+		sys.exit(2)
+	color = True
+	usedep = False
+	useurl = False
+	for opt, arg in opts:
+		if opt in ("-h", "--help"):
+			usage()
+			sys.exit(0)
+		elif opt in ("-f", "--file"):
+			depfile = arg
+			usedep = True
+		elif opt in ("-u", "--url"):
+			url = arg
+			useurl = True
+		elif opt in ("-n", "--no-color"):
+			color = False
+	if not len(args) == 0:
+		print 'ERROR: Too many arguments'
+		usage()
+		sys.exit(2)
+	if usedep and useurl:
+		print 'ERROR: You cannot specify both a file and a URL'
+		sys.exit(2)
+	elif not usedep and not useurl:
+		print 'ERROR: You must specify either a file or a URL'
+		usage()
+		sys.exit(2)
+	elif usedep:
+		deps = depsfromfile(depfile)
+	elif useurl:
+		deps = depsfromurl(url)
+	checkdeps(deps, color)
+
+def usage():
+	print 'USAGE:', os.path.basename(sys.argv[0]),'[OPTIONS]'
+	print
+	print 'OPTIONS:'
+	print '   -f, --file         use a local .dep/.sug/.con file'
+	print '   -u, --url          use a URL to a .dep/.sug/.con file'
+	print '   -n, --no-color     do not color missing dependencies red'
+	print '   -h, --help         this help message'
+	print
+	print 'This modified version will use "packages-*" has base for'
+	print 'instaled packages instead of "/var/log/packages"'
+
+def depsfromfile(depfile):
+	f = open(depfile)
+	deps = f.read().replace('\n', ' ').replace(',', ' ').split(' ')
+	return deps
+
+def depsfromurl(url):
+	f = urllib2.urlopen(url)
+	deps = f.read().replace('\n', ' ').replace(',', ' ').split(' ')
+	return deps
+
+def maxlen(deps):
+	max = 0
+	for i in deps:
+		l = len(i)
+		if l > max:
+			max = l
+	return max
+
+def installedpkgs():
+	pkgs = []
+	for p in glob.glob('packages-*'):
+		for i in open(p, 'r'):
+			i = i.strip()
+			pkgname = i
+			pkgs.append([pkgname, i])
+	return pkgs
+
+def pkgfullname(pkg):
+	fullname = ''
+	for i in installedpkgs():
+		if pkg == i[0]:
+			fullname = i[1]
+	return fullname
+
+def fillcommas(dep, maxl):
+	numberofcommas = maxl - len(dep) + 3
+	for i in range(0, numberofcommas):
+		write('.')
+
+def checkdeps(deps, color):
+	instshort = []
+	maxl = maxlen(deps)
+	for i in installedpkgs():
+		instshort.append(i[0])
+	for i in deps:
+		pkglist = ''
+		found = False
+		if not i == '':
+			write(i)
+			fillcommas(i, maxl)
+			for dep in i.split('|'):
+				if not dep == '':
+					if dep in instshort:
+						found = True
+						pkglist = pkglist+pkgfullname(dep)+'  '
+		if found:
+			print pkglist.rstrip(' ')
+		else:
+			if not i == '':
+				if color == True:
+					print HILIGHTCOLOR+'NOT FOUND'+ENDCOLOR
+				else:
+					print 'NOT FOUND'
+
+if __name__ == "__main__":
+	main(sys.argv[1:])

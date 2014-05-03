@@ -1,0 +1,5 @@
+Version -next
+  - Fix for glibc installation when /etc/localtime was missing.
+  - Fix kernel source directory to use the kernel version and not '2.*' which is wrong nowadays.
+  - New way of handling /dev/null for the last module. Safer.
+  - New module 'test' for testing the boot process of a Live CD without installing a full distro.

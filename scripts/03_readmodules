@@ -1,0 +1,35 @@
+#!/bin/sh
+# vim: set syn=sh ft=sh et sw=2 sts=2 ts=2 tw=0:
+# Maintainer: JRD <jrd@salixos.org>
+# Contributors: Shador <shador@salixos.org>, Akuna <akuna@salixos.org>
+# Licence: GPL v3+
+#
+cd $(dirname "$0")
+[ "$(basename $(pwd))" = scripts ] && cd ..
+
+. scripts/00_common
+if [ -z "$modules" ]; then
+  echo3 "Reading modules"
+  modules=$(mktemp)
+  export modules
+  num=1
+  while read m; do
+    line=$(echo $m | grep '^[\t ]*module=' 2>/dev/null)
+    if [ ! -z "$line" ]; then
+      name=$(echo $m|sed 's/^[\\t ]*module=\(.*\),.*/\1/')
+      file=$(echo $m|sed 's/^[\\t ]*module=.*,\(.*\)/\1/')
+      if [ ! -e "$startdir/$file" ]; then
+        quit "$startdir/$file doesn't exist for module $name"
+        exit 1
+      fi
+      list="$(cat "$startdir/$file"|tr '\n' ' ')"
+      numstr=$num
+      while [ ${#numstr} -lt 2 ]; do
+        numstr="0$numstr"
+      done
+      echo "$numstr|$name|$list" >> $modules
+      echo "  * Module $numstr-$name"
+      num=$((num + 1))
+    fi
+  done < "$startdir"/MODULES_INFOS
+fi

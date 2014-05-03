@@ -1,0 +1,29 @@
+#!/bin/sh
+# vim: set syn=sh ft=sh et sw=2 sts=2 ts=2 tw=0:
+# Maintainer: JRD <jrd@salixos.org>
+# Contributors: Shador <shador@salixos.org>, Akuna <akuna@salixos.org>
+# Licence: GPL v3+
+#
+cd $(dirname "$0")
+[ "$(basename $(pwd))" = scripts ] && cd ..
+
+. scripts/00_common
+. scripts/03_readmodules
+echo3 "Checking modules"
+lastmodule=''
+if [ -z "$lastmodule" ]; then
+  while read m; do
+    list="$(echo "$m"|cut -d\| -f3-)"
+    m=$(echo "$m"|cut -d\| -f1-2|sed 's/|/-/')
+    echo3 "Verifying packages for $m..."
+    lastmodule=$m
+    for p in $list; do
+      file="$(find -L "$startdir"/PKGS -name "$p-*"|grep "$p-[^-]\+-[^-]\+-[^-]\+.t[gblx]z"|head -n 1)"
+      if [ ! -e "$file" ]; then
+        quit "$p, referenced by module $m, is not available in $startdir/PKGS/"
+        exit 1
+      fi
+    done
+  done < "$modules"
+fi
+export lastmodule

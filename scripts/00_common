@@ -1,0 +1,92 @@
+#!/bin/sh
+# vim: set syn=sh ft=sh et sw=2 sts=2 ts=2 tw=0:
+# Maintainer: JRD <jrd@salixos.org>
+# Contributors: Shador <shador@salixos.org>, Akuna <akuna@salixos.org>
+# Licence: GPL v3+
+#
+if [ -z "$startdir" ]; then
+  cd $(dirname "$0")
+  [ "$(basename $(pwd))" = scripts ] && cd ..
+
+  startdir="$(pwd)"
+  export startdir
+  
+  if [ $(id -ru) -ne 0 ]; then
+    echo "You need to be root to build the ISO because some commands needs it."
+    echo "fakeroot could not be used, sorry."
+    exit 1
+  fi
+
+  [ -t 0 ] && PIPEIN=0 || PIPEIN=1
+  [ -t 1 ] && PIPEOUT=0 || PIPEOUT=1
+  [ -t 2 ] && PIPEERR=0 || PIPEERR=1
+  if [ $PIPEOUT -eq 1 ] && [ $PIPEERR -eq 0 ]; then
+    exec 2>&1
+    PIPEERR=1
+  fi
+  export PIPEIN
+  export PIPEOUT
+  export PIPEERR
+  
+  if [ ! -e "$startdir"/MODULES_INFOS ]; then
+    cat << EOF
+ERROR: $startdir/MODULES_INFOS not found
+This file must describe the modules to build for the live CD like this:
+module=name,package_list_file
+“package_list_file” is a list of package names to include, one per line.
+The packages must reside in $startdir/PKGS/
+One “kernel” special module must provide the kernelive package
+EOF
+    exit 1
+  fi
+ 
+  . ./config
+  
+  echo3() {
+    echo ''
+    echo "############################################################"
+    echo "$1"
+    echo "############################################################"
+  }
+  
+  quit() {
+    echo "$1"
+    [ -n "$modules" ] && rm -f "$modules"
+  }
+
+  dir2squashfs() {
+    if [ -z "$3" ]; then
+      echo "syntax: directory compressed_file"
+      return 1
+    fi
+    comp="$1"
+    dir="$2"
+    file="$3"
+    shift 3
+    echo "Compressing $dir to $file using $comp compression..."
+    [ -e "$file" ] && rm -f "$file"
+    mksquashfs "$dir" "$file" $([ "$PIPEOUT" = "1" ] && echo '-no-progress') -b 1M -comp "$comp" "$@"
+    if [ $? -ne 0 ]; then return 1; fi
+    chmod a-wx+r "$file"
+  }
+
+  dir2lzo() {
+    dir2squashfs lzo "$@"
+  }
+
+  dir2gz() {
+    dir2squashfs gz "$@"
+  }
+
+  dir2lzma() {
+    dir2squashfs lzma "$@"
+  }
+
+  dir2lzm() {
+    dir2lzma "$@"
+  }
+
+  dir2xz() {
+    dir2squashfs xz "$@" -Xbcj x86 -Xdict-size '50%'
+  }
+fi

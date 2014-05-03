@@ -1,0 +1,16 @@
+#!/bin/sh
+# vim: set syn=sh ft=sh et sw=2 sts=2 ts=2 tw=0:
+# Maintainer: JRD <jrd@salixos.org>
+# Contributors: Shador <shador@salixos.org>, Akuna <akuna@salixos.org>
+# Licence: GPL v3+
+#
+cd $(dirname "$0")
+[ "$(basename $(pwd))" = scripts ] && cd ..
+
+. scripts/00_common
+mkdir -p "$startdir"/src/empty "$startdir"/src/module 2>/dev/null
+# be sure that module is unmounted
+umount "$startdir"/src/module >/dev/null 2>&1
+# test of funionfs
+"$startdir"/funionfs none "$startdir"/src/empty || exit 1
+umount "$startdir"/src/empty

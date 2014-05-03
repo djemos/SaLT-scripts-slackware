@@ -1,0 +1,118 @@
+#!/bin/sh
+# vim: set syn=sh ft=sh et sw=2 sts=2 ts=2 tw=0:
+# Maintainer: JRD <jrd@salixos.org>
+# Contributors: Shador <shador@salixos.org>, Akuna <akuna@salixos.org>
+# Licence: GPL v3+
+#
+cd $(dirname "$0")
+[ "$(basename $(pwd))" = "scripts" ] && cd ..
+
+. scripts/00_common
+. scripts/03_readmodules
+. scripts/05_preparesources
+if [ -z "$lastmodule" ]; then
+  lastmodule=''
+  while read m; do
+    m=$(echo "$m"|cut -d\| -f1-2|sed 's/|/-/')
+    lastmodule=$m
+  done < "$modules"
+  export lastmodule
+fi
+
+MODULE="$1"
+[ -z "$MODULE" ] && MODULE=all
+
+funionfsopts="$startdir/src/empty=ro" # the first readonly directory (will always be empty)
+nmodule=0
+inittabfile=$(find "$startdir"/PKGS -name "sysvinit-scripts-*"|grep "sysvinit-scripts-[^-]\+-[^-]\+-[^-]\+.t[gblx]z"|head -n 1)
+cmdinstall='spkg -i'
+which spkg >/dev/null 2>&1 || cmdinstall='installpkg'
+cd "$startdir"/src
+while read m; do
+  list="$(echo "$m"|cut -d\| -f3-)"
+  m=$(echo "$m"|cut -d\| -f1-2|sed 's/|/-/')
+  if [ $m = $MODULE ] || [ $MODULE = all ]; then
+    if [ -e $m ]; then
+      rm -rf $m
+    fi
+    echo3 "Installing packages for $m..."
+    mkdir $m
+    ROOT="$startdir"/src/module # for use by spkg or installpkg
+    export ROOT
+    echo "funionfsopts=$funionfsopts"
+    "$startdir"/funionfs -o "dirs=$funionfsopts:$startdir/src/$m" none "$ROOT"
+    funionfsopts="$funionfsopts:$startdir/src/$m=ro"
+    nb=$(echo "$list" | wc -w)
+    i=0
+    d0=$(date +%s)
+    for p in $list; do
+      i=$(( $i + 1 ))
+      [ "$PIPEOUT" != "1" ] && clear
+      echo "⋅⋅⋅---=== Installing packages for $m ===---⋅⋅⋅"
+      echo ''
+      echo -n 'Progression : ['
+      perct=$(($i * 100 / $nb))
+      nbSharp=$(($i * 50 / $nb))
+      nbSpace=$((50 - $nbSharp))
+      for j in $(seq $nbSharp); do echo -n '#'; done
+      for j in $(seq $nbSpace); do echo -n '_'; done
+      echo "] $i / $nb ($perct%)"
+      offset=$(($(date +%s) - $d0))
+      timeremain=$((($nb - $i) * $offset / $i))
+      echo 'Remaining time (estimated) :' $(date -d "1970-01-01 UTC +$timeremain seconds" +%M:%S)
+      echo ''
+      file=$(find -L "$startdir"/PKGS -name "$p-*"|grep "$p-[^-]\+-[^-]\+-[^-]\+.t[gblx]z"|head -n 1)
+      $cmdinstall "$file"
+    done
+    # dotnew
+    if [ -e "$ROOT"/etc ]; then
+      find "$ROOT"/etc -name '*.new'|xargs -i@ bash -c '(N="$1"; F="$(dirname $N)/$(basename $N .new)"; if [ -e $F ]; then rm $N; else mv $N $F; fi)' -- @
+    fi
+    # inittab
+    if [ -e "$inittabfile" ]; then
+      # first module is consider to be 'core' and only boot in console runlevel 3
+      if [ $nmodule -eq 0 ]; then
+        tar -xOf "$inittabfile" etc/inittab.new | sed 's/^id:.:initdefault:/id:3:initdefault:/' > "$ROOT"/etc/inittab
+      elif [ $nmodule -eq 1 ]; then
+        sed -i 's/^id:.:initdefault:/id:4:initdefault:/' "$ROOT"/etc/inittab
+      fi
+    fi
+    # /var/log/setup
+    if [ $lastmodule = $m ]; then
+      (
+        cd "$ROOT"
+        # /dev/null could be needed and will not be usable, so the trick is to delete it, and then delete the "deletion".
+        rm ./dev/null
+        if [ -e var/log/setup/setup.htmlview ]; then
+          grep -q midori var/log/setup/setup.htmlview || sed -i 's/seamonkey/\0 midori/' var/log/setup/setup.htmlview
+        fi
+        chmod a+r-x+X -R etc/gtk-2.0 etc/pango
+        for install_script in var/log/setup/setup.*; do
+          script=$(basename $install_script)
+          if [ -x var/log/setup/$script ]; then
+            echo "$script" | grep -q 'setup\.\(liloconfig\|ll\.eliloconfig\|grubconfig\|mouse\|netconfig\|setconsolefont\|timeconfig\|xwmconfig\|70\.install-kernel\|80\.make-bootdisk\)' && continue
+            echo "Running '/var/log/setup/setup.$script $ROOT'"
+            ./var/log/setup/$script "$ROOT" 
+          fi
+        done
+        echo "Running 'chroot . /usr/sbin/clocksetup -c -z'"
+        chroot . /usr/sbin/clocksetup -c -z
+        echo "Running 'chroot . /usr/sbin/localesetup'"
+        chroot . /usr/sbin/localesetup
+        echo "Running 'chroot . /usr/sbin/update-all'"
+        chroot . /usr/sbin/update-all
+        sleep 10
+        rm ./dev/null
+      )
+    fi
+    umount "$ROOT"
+    # remove any fakely deleted files in RO branches, default suffix is _DELETED~
+    find "$startdir/src/$m" -name '*_DELETED~' -prune -exec rm -rf '{}' \;
+  else
+    if [ -e $m ]; then
+      funionfsopts="$funionfsopts:$startdir/src/$m=ro"
+    fi
+  fi
+  nmodule=$(($nmodule + 1))
+done < "$modules"
+cd "$startdir"

@@ -1,0 +1,17 @@
+#!/bin/sh
+# vim: set syn=sh ft=sh et sw=2 sts=2 ts=2 tw=0:
+# Maintainer: JRD <jrd@salixos.org>
+# Contributors: Shador <shador@salixos.org>, Akuna <akuna@salixos.org>
+# Licence: GPL v3+
+#
+cd $(dirname "$0")
+[ "$(basename $(pwd))" = scripts ] && cd ..
+
+. scripts/00_common
+echo3 "Creating ISO..."
+CDNAME="${DISTRO}live_${VER}"
+echo $CDNAME
+[ -n "$DEBUG" ] && DEBUG='-d 1' || DEBUG='-d 0'
+build-slackware-live.sh --init / src/live 
+build-slackware-live.sh --iso src/live "$startdir/$ISO_NAME"
+md5sum "$ISO_NAME" > "$ISO_NAME.md5"
