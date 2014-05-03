@@ -1,7 +1,7 @@
 #!/bin/sh
 # vim: set syn=sh ft=sh et sw=2 sts=2 ts=2 tw=0:
 # Maintainer: JRD <jrd@salixos.org>
-# Contributors: Shador <shador@salixos.org>, Akuna <akuna@salixos.org> <djemos@slackel.gr>
+# Contributors: Shador <shador@salixos.org>, Akuna <akuna@salixos.org>, <djemos@slackel.gr>
 # Licence: GPL v3+
 #
 # Used to build the live ISO
