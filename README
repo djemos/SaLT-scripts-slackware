@@ -63,12 +63,6 @@ III/ Create an ISO
       ┊ root-password
       ┊ hostname
 
-    ◆ Copy the standard kernel packages in std-kernel directory:
-      - kernel-huge
-      - kernel-modules
-      - kernel-firmware
-      - kernel-headers
-
     ◆ Copy your special packages in local directory:
       - sli (slackel-live-installer)
       - slackware-live
