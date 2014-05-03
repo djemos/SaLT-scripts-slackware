@@ -1,0 +1,126 @@
+                           │ SaLT scripts │
+                                           
+
+
+I/ What “SaLT scripts”?
+┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+  → Slackware-live is a tool to create a live slackware iso.
+  → SaLT scripts are a collection of scripts that deal with Slackware-live, can build live modules and that
+    can create a ready-to-burn Live ISO.
+
+  Both these tools are free (GPL v3+) and maintained by the same team:
+    ▸ JRD <jrd@salixos.org>
+    ▸ Shador <shador@salixos.org>
+    ▸ Akuna <akuna@salixos.org>
+	▸ djemos <djemos@slackel.gr>
+
+II/ Minimum requirements
+┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+  Some software must be installed in the host system. I will list them as named in Slackware/Slackel.
+  Required:
+   - spkg or pkgtools
+   - coreutils, sed, grep, tar, gzip, bzip2, xz, findutils
+   - glibc, sysfsutils, gcc, glib2, automake, autoconf, make
+   - wget
+   - fuse, util-linux-ng
+   - squashfs-tools
+   - perl
+   - imagemagick
+   - cdrtools
+  Optional:
+   - xcf2png (if you provide a background image in XCF format)
+
+
+III/ Create an ISO
+┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+  For creating an ISO, you only need few things actually.
+  You will need a list of packages (organized by live modules),
+  some custom packages (like an installer, …), the standard
+  kernel packages (image, headers, …), a list of liveenv modules, and a PNG image for
+  the bootloader background.
+
+  1/ packages
+  -----------
+    You must now decide which packages you want to include in your ISO.
+    You must also arganize your packages in collections (modules).
+    Be carefull to put any package that depends directly on the kernel version in a separate
+    module, together with the kernelive package.
+    The last module will contains a special package, named liveenv, which deals with configuring
+    a live system.
+
+    ◆ Create a file packages-foobar for each foobar module. This file will list each package on
+      one line.
+    ◆ Create a file MODULES_INFO with the referenced modules:
+      ┊ module=kernel,packages-kernel
+      ┊ module=base,packages-base
+      ┊ module=live,packages-live
+
+    You must now define which liveenv module you want to provide.
+    You can list them in liveenv/modules directory. At least all 0? modules should be considered.
+
+    ◆ Create a file MODULES.liveenv with the referenced liveenv modules:
+      ┊ etc
+      ┊ root-password
+      ┊ hostname
+
+    ◆ Copy the standard kernel packages in std-kernel directory:
+      - kernel-huge
+      - kernel-modules
+      - kernel-firmware
+      - kernel-headers
+
+    ◆ Copy your special packages in local directory:
+      - sli (slackel-live-installer)
+      - slackware-live
+
+    Get all remaining packages by issueing:
+      $ ./getpkgs.sh ARCH VERSION
+    where ARCH could be 32 or 64 and VERSION is the Slackware version.
+
+  3/ configuration
+  ----------------
+    You need to indicate some configuration before continuing.
+    This is done in a file named “config”. Example:
+      ┊ # vim: set syn=sh:
+      ┊ if [ -z "$DISTRO" ]; then
+      ┊ DISTRO=slackel
+      ┊ VER=openbox-6.0
+      ┊ #RLZ=test
+      ┊ # empty for a final release for example
+      ┊ RLZ=
+      ┊ #
+      ┊ #BGIMAGE_NAME=slackel.xcf
+      ┊ # don't change this unless you sure that the newer version works the same
+      ┊ FUFSVER=0.4.2
+      ┊ FUFSURL=http://funionfs.apiou.org/file/funionfs-$FUFSVER.tar.gz
+      ┊ # this is atuo-generated for convenience but you can provide another filename
+      ┊ ISO_NAME=${DISTRO}live-$VER${RLZ:+-$RLZ}.iso
+      ┊ # the package containing the live kernel. Normally you won't need to change this
+      ┊ # unless you have a very good reason, use xz
+      ┊ COMP=xz # could be xz, lzm, lzo, gz.
+      ┊
+      ┊ export DISTRO
+      ┊ export VER
+      ┊ export RLZ
+      ┊ export BGIMAGE_NAME
+      ┊ export FUFSVER
+      ┊ export FUFSURL
+      ┊ export ISO_NAME
+      ┊ export COMP
+      ┊ 
+
+    You will also need a background image for the bootloader (the one you specified in the
+    config file).
+    The image could be in any format, but will be converted to PNG 640×480, 8bits RGB Color.
+    If you decide to have a Gimp XCF source file, you will also need the xcf2png tool installed.
+
+  
+  ◆ After that, you just need to run:
+      # ./build-iso.sh
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ▸ Akuna <akuna@salixos.org>
+  ▸ JRD <jrd@salixos.org>
+  ▸ Shador <shador@salixos.org>
+  ▸ djemos <djemos@slackel.gr>
