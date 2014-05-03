@@ -5,7 +5,8 @@
 # Licence: GPL v3+
 #
 # Used to build the live ISO
-# SaLT is used to build this Live CD.
+# build-slackware-live.sh is used to create the initrd need to bootthe Live CD.
+# build-slackware-live.sh is used also to build this Live CD. 
 # funionfs (unionfs with fuse) is still used for building the modules because it is simpler and easier than aufs which may not be compiled in your kernel and which is not available in FUSE. The 0.4.2 version is used in time of writing, instead of 0.4.3 because this one is buggy. Later versions must be checked to see if it's ok with "cp" and "mkfifo" for example.
 #
 # See README
