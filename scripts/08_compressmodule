@@ -18,7 +18,7 @@ MODULE="$1"
   while read m; do
     m=$(echo "$m"|cut -d\| -f1-2|sed 's/|/-/')
     if [ $m = $MODULE ] || [ $MODULE = all ]; then
-      echo3 "Creating module $m.salt..."
+      echo3 "Creating module $m.slm..."
       if [ -e live/boot/modules/$m.slm ]; then
         rm -f live/boot/modules/$m.slm
       fi
