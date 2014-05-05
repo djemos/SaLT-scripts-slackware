@@ -67,7 +67,7 @@ III/ Create an ISO
 
     ◆ Copy your special packages in local directory:
       - sli (slackel-live-installer)
-      - slackware-live
+      - slackware-live (compile and install it. It will be used for initrd.gz and iso creation) 
 
     Get all remaining packages by issueing:
       $ ./getpkgs.sh ARCH VERSION
