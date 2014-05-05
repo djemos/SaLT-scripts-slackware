@@ -14,4 +14,5 @@ echo $CDNAME
 [ -n "$DEBUG" ] && DEBUG='-d 1' || DEBUG='-d 0'
 build-slackware-live.sh --init / src/live 
 build-slackware-live.sh --iso src/live "$startdir/$ISO_NAME"
+isohybrid "$ISO_NAME"
 md5sum "$ISO_NAME" > "$ISO_NAME.md5"
