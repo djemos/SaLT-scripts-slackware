@@ -17,10 +17,12 @@ firefox-profile
 EOF
 
 FIREFOXVER=$(ls -1 "$PKGSDIR"/mozilla-firefox-*-*-*.txz 2>/dev/null | head -n 1 | sed 's/.*-.*-\([^-]*\)-[^-]*-[^-]*\.txz/\1/')
+FIREFOXVERR=`echo $FIREFOXVER | sed "s/\(.*\)\.\(.*\)\.\(.*\)esr/\1esr/"`
+
 if [ -n "$FIREFOXVER" ]; then
   LIBDIRSUFFIX=
   [ $(uname -m) = x86_64 ] && LIBDIRSUFFIX=64
-  FIREFOXMILESTONE=$(tar -xOf "$PKGSDIR"/mozilla-firefox-$FIREFOXVER-*.txz usr/lib$LIBDIRSUFFIX/firefox-$FIREFOXVER/platform.ini|grep Milestone| sed 's/^Milestone=\(.*\)/\1/')
+  FIREFOXMILESTONE=$(tar -xOf "$PKGSDIR"/mozilla-firefox-$FIREFOXVER-*.txz usr/lib$LIBDIRSUFFIX/firefox-$FIREFOXVERR/platform.ini|grep Milestone| sed 's/^Milestone=\(.*\)/\1/')
   PROFILE_NAME=jb8obseq
   mkdir -p "$RDIR"/home/one/.mozilla/firefox/$PROFILE_NAME.default/
   cat <<EOF > "$RDIR"/home/one/.mozilla/firefox/profiles.ini
