@@ -16,11 +16,11 @@ user-settings-kde
 
 EOF
 
-USERSETTINGS_KDE="$(readlink -f "$(ls -1 "$PKGSDIR"/user-settings-kde-[0-9]*.txz 2>/dev/null)")"
+USERSETTINGS_KDE="$(readlink -f "$(ls -1 "$PKGSDIR"/user-settings-slackel-kde-[0-9]*.txz 2>/dev/null)")"
 if [ -n "$USERSETTINGS_KDE" ]; then
   tar -C "$RDIR" -xf "$USERSETTINGS_KDE" etc/skel
 else
-  echo "Cannot add $0 because package user-settings-kde is missing in PKGS." >&2
+  echo "Cannot add $0 because package user-settings-slackel-kde is missing in PKGS." >&2
   exit 1
 fi
 cp -r "$RDIR"/etc/skel/* "$RDIR"/etc/skel/.??* "$RDIR"/home/one/ 2>/dev/null
