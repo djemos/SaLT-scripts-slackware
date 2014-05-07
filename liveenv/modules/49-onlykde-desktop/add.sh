@@ -17,9 +17,9 @@ onlykde-desktop
 EOF
 
 (
-  cd "$RDIR"/root/home/one/Desktop
+  cd "$RDIR"/home/one/Desktop
   for f in *-kde.desktop; do
     mv $f $(echo "$f"|sed 's/-kde//')
   done
-  chmod u+x  "$RDIR"/root/home/one/Desktop/*.desktop
+  chmod u+x  "$RDIR"/home/one/Desktop/*.desktop
 )
