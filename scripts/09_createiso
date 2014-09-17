@@ -12,6 +12,22 @@ echo3 "Creating ISO..."
 CDNAME="${DISTRO}live_${VER}"
 echo $CDNAME
 [ -n "$DEBUG" ] && DEBUG='-d 1' || DEBUG='-d 0'
+
+if [ `uname -m` != "x86_64" ]; then
+	kv=`ls -l /boot/vmlinuz | cut -f2 -d'>' | sed s/^[^0-9]*//`
+	kvnp=`echo ${kv:0:7}`
+	(
+	cd /boot
+	ln -sf vmlinuz-huge-${kvnp} vmlinuz
+	)
+    build-slackware-live.sh --init / src/live
+	mv src/live/boot/initrd.gz src/live/boot/nosmp.gz
+    mv src/live/boot/vmlinuz src/live/boot/vmlinuznp
+    (
+    cd /boot
+    ln -sf /boot/vmlinuz-huge-smp-$kv /boot/vmlinuz
+    )
+fi
 build-slackware-live.sh --init / src/live 
 build-slackware-live.sh --iso src/live "$startdir/$ISO_NAME"
 isohybrid "$ISO_NAME"
