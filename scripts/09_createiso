@@ -13,7 +13,7 @@ CDNAME="${DISTRO}live_${VER}"
 echo $CDNAME
 [ -n "$DEBUG" ] && DEBUG='-d 1' || DEBUG='-d 0'
 if [ `uname -m` != "x86_64" ]; then
-	answer="$(eval dialog --title \"Include i486 non-SMP kernel?\" \
+	answer="$(eval dialog --title \"Include i486 non-SMP kernel? You have to include i486 non-SMP kernel and modules on packages-kernel before creating modules. If not then go back, create again kernel module and compress it.\" \
 	--stdout \
 	--menu \"Do you want to include the i486 non-SMP kernel?\" \
 	0 0 0 \
