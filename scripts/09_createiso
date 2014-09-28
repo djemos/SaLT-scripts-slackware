@@ -52,5 +52,9 @@ if [ `uname -m` != "x86_64" ]; then
 fi
 cp ../common/install_on_usb/* src/live/boot/syslinux
 build-slackware-live.sh --iso src/live "$startdir/$ISO_NAME"
-isohybrid "$ISO_NAME"
+unset ISOHYBRID_EFI_OPTS
+if [[ "$arch" == "x86_64" ]]; then
+	ISOHYBRID_EFI_OPTS="--uefi"
+fi
+isohybrid $ISOHYBRID_EFI_OPTS "$ISO_NAME"
 md5sum "$ISO_NAME" > "$ISO_NAME.md5"
