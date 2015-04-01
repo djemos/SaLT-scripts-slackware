@@ -29,6 +29,7 @@ II/ Minimum requirements
    - cdrtools
    - slackware-live
    - unionfs-fuse
+   - syslinux
   Optional:
    - xcf2png (if you provide a background image in XCF format)
 
