@@ -18,6 +18,6 @@ EOF
 
 cat <<EOF > "$RDIR"/home/one/.dmrc
 [Desktop]
-Session=kde-plasma
+Session=default
 
 EOF
