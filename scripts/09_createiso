@@ -34,7 +34,7 @@ if [ `uname -m` != "x86_64" ]; then
 	else
 		if [ "$answer" == "Yes" ]; then		   
 		kv=`ls -l /boot/vmlinuz | cut -f2 -d'>' | sed s/^[^0-9]*//`
-		kvnp=`echo ${kv:0:7}`
+		kvnp=`echo ${kv: 0:-4}`
 		(
 			cd /boot
 			ln -sf vmlinuz-huge-${kvnp} vmlinuz
