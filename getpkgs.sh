@@ -40,6 +40,7 @@ SOURCE=http://salix.enialis.net/$srcdir/$ver/:PREFERRED
 SOURCE=http://www.slackel.gr/repo/$srcdir/slackware-current/:OFFICIAL
 SOURCE=http://www.slackel.gr/repo/$srcdir/slackware-current/extra/:OFFICIAL
 SOURCE=http://www.slackel.gr/repo/$srcdir/current/:CUSTOM
+SOURCE=http://sourceforge.net/projects/slackel/files/repo/$srcdir/current/:CUSTOM
 EOF
 ROOT=$PWD
 export ROOT
