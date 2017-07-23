@@ -14,7 +14,7 @@
 cd $(dirname "$0")
 . scripts/00_common
 echo3 "Building $DISTRO live v.$VER"
-. scripts/01_getfunionfs
+#. scripts/01_getfunionfs
 . scripts/02_liveenv
 . scripts/03_readmodules
 . scripts/04_checkmodules
