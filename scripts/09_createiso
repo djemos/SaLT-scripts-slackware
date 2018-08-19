@@ -65,10 +65,12 @@ cp ../common/install_on_usb/install_on_usb.sh src/live/boot/
 cp ../common/install_on_usb/README_INSTALL_ON_USB.TXT src/live/boot/
 cp ../common/install_on_usb/make_new_kernel_module.sh src/live/boot/
 build-slackware-live.sh --iso src/live "$startdir/$ISO_NAME"
-unset ISOHYBRID_EFI_OPTS
-if [[ `uname -m` == "x86_64" ]]; then
-	ISOHYBRID_EFI_OPTS="--uefi"
-fi
-isohybrid $ISOHYBRID_EFI_OPTS "$ISO_NAME"
+#unset ISOHYBRID_EFI_OPTS
+#if [[ `uname -m` == "x86_64" ]]; then
+#	ISOHYBRID_EFI_OPTS="--uefi"
+#fi
+#isohybrid $ISOHYBRID_EFI_OPTS "$ISO_NAME"
 md5sum "$ISO_NAME" > "$ISO_NAME.md5"
-echo $ISO_NAME has been created
+ls PKGS/* > "$CDNAME.pkglist"
+sed -i "s|PKGS/||" "$CDNAME.pkglist"
+echo $startdir/$ISO_NAME has been created
