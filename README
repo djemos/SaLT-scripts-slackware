@@ -12,7 +12,7 @@ I/ What “SaLT scripts”?
     ▸ JRD <jrd@salixos.org>
     ▸ Shador <shador@salixos.org>
     ▸ Akuna <akuna@salixos.org>
-    ▸ djemos <djemos@slackel.gr>
+    ▸ djemos <dijemos@gmail.com>
 
 II/ Minimum requirements
 ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
@@ -28,7 +28,7 @@ II/ Minimum requirements
    - imagemagick
    - cdrtools
    - slackware-live
-   - unionfs-fuse
+   - unionfs
    - syslinux
   Optional:
    - xcf2png (if you provide a background image in XCF format)
@@ -99,9 +99,9 @@ III/ Create an ISO
       ┊ export DISTRO
       ┊ export VER
       ┊ export RLZ
-      ┊ export BGIMAGE_NAME
-      ┊ export FUFSVER
-      ┊ export FUFSURL
+      ┊ #export BGIMAGE_NAME
+      ┊ #export FUFSVER
+      ┊ #export FUFSURL
       ┊ export ISO_NAME
       ┊ export COMP
       ┊ 
@@ -120,4 +120,4 @@ III/ Create an ISO
   ▸ Akuna <akuna@salixos.org>
   ▸ JRD <jrd@salixos.org>
   ▸ Shador <shador@salixos.org>
-  ▸ djemos <djemos@slackel.gr>
+  ▸ djemos <dijemos@gmail.com>
