@@ -8,9 +8,13 @@ cd $(dirname "$0")
 [ "$(basename $(pwd))" = scripts ] && cd ..
 
 . scripts/00_common
-mkdir -p "$startdir"/src/empty "$startdir"/src/module 2>/dev/null
+mkdir -p "$startdir"/src/empty "$startdir"/src/module "$startdir"/src/upper "$startdir"/src/.ovlwork 2>/dev/null
 # be sure that module is unmounted
-umount "$startdir"/src/module >/dev/null 2>&1
+#umount "$startdir"/src/module 2>/dev/null
 # test of funionfs
-"$startdir"/funionfs none "$startdir"/src/empty || exit 1
-umount "$startdir"/src/empty
+#"$startdir"/funionfs none "$startdir"/src/empty || exit 1
+# test of overlayfs (unionfs)
+mount -t overlay -o lowerdir="$startdir"/src/empty,upperdir="$startdir"/src/upper,workdir="$startdir"/src/.ovlwork overlay "$startdir"/src/module || exit 1
+umount "$startdir"/src/module
+rm -rf "$startdir"/src/.ovlwork
+rm -rf "$startdir"/src/upper

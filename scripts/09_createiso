@@ -44,7 +44,7 @@ if [ `uname -m` != "x86_64" ]; then
 		mv src/live/boot/vmlinuz src/live/boot/vmlinuznp
 		(
 			cd /boot
-			ln -sf vmlinuz-huge-smp-$kv vmlinuz
+			ln -sf /boot/vmlinuz-huge-smp-$kv /boot/vmlinuz
 		)
 		else
 			mv menus menus.bak
