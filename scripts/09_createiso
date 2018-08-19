@@ -63,6 +63,7 @@ cp /usr/share/syslinux/mbr.bin src/live/boot/syslinux/
 cp /usr/share/syslinux/gptmbr.bin src/live/boot/syslinux/
 cp ../common/install_on_usb/install_on_usb.sh src/live/boot/
 cp ../common/install_on_usb/README_INSTALL_ON_USB.TXT src/live/boot/
+cp ../common/install_on_usb/make_new_kernel_module.sh src/live/boot/
 build-slackware-live.sh --iso src/live "$startdir/$ISO_NAME"
 unset ISOHYBRID_EFI_OPTS
 if [[ `uname -m` == "x86_64" ]]; then
