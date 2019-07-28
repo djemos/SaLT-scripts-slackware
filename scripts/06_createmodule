@@ -73,7 +73,7 @@ while read m; do
       offset=$(($(date +%s) - $d0))
       timeremain=$((($nb - $i) * $offset / $i))
       echo 'Remaining time (estimated) :' $(date -d "1970-01-01 UTC +$timeremain seconds" +%M:%S)
-      echo ''      
+      echo ''
       file=$(find -L "$startdir"/PKGS -name "$p-*"|grep "$p-[^-]\+-[^-]\+-[^-]\+.t[gblx]z"|head -n 1)
       $cmdinstall "$file"
     done
