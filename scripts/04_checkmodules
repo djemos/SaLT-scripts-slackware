@@ -18,7 +18,7 @@ if [ -z "$lastmodule" ]; then
     echo3 "Verifying packages for $m..."
     lastmodule=$m
     for p in $list; do
-      file="$(find -L "$startdir"/PKGS -name "$p-*"|grep "$p-[^-]\+-[^-]\+-[^-]\+.t[gblx]z"|head -n 1)"
+      file="$(find -L "$startdir"/PKGS -name "$p-*"|grep "$p-[^-]\+-[^-]\+-[^-]\+.t[gblx]z"|sort -V|head -n 1)"
       if [ ! -e "$file" ]; then
         quit "$p, referenced by module $m, is not available in $startdir/PKGS/"
         exit 1
