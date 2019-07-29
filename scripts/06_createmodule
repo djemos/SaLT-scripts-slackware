@@ -38,11 +38,6 @@ while read m; do
     if [ -e $m ]; then
       rm -rf $m
     fi
-   
-	if [ $m = "01-core" ]; then
-		mv $startdir/PKGS/vim-gvim-* $startdir/local/
-	fi
-      
     echo3 "Installing packages for $m..."
     mkdir $m
     ROOT="$startdir"/src/module # for use by spkg or installpkg
@@ -74,14 +69,9 @@ while read m; do
       timeremain=$((($nb - $i) * $offset / $i))
       echo 'Remaining time (estimated) :' $(date -d "1970-01-01 UTC +$timeremain seconds" +%M:%S)
       echo ''
-      file=$(find -L "$startdir"/PKGS -name "$p-*"|grep "$p-[^-]\+-[^-]\+-[^-]\+.t[gblx]z"|head -n 1)
+      file=$(find -L "$startdir"/PKGS -name "$p-*"|grep "$p-[^-]\+-[^-]\+-[^-]\+.t[gblx]z"|sort -V|head -n 1)
       $cmdinstall "$file"
     done
-     
-	if [ $m = "01-core" ]; then
-		mv $startdir/local/vim-gvim-* $startdir/PKGS/
-	fi
-      
     # dotnew
     if [ -e "$ROOT"/etc ]; then
       find "$ROOT"/etc -name '*.new'|xargs -i@ bash -c '(N="$1"; F="$(dirname $N)/$(basename $N .new)"; if [ -e $F ]; then rm $N; else mv $N $F; fi)' -- @
