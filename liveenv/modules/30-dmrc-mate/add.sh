@@ -11,7 +11,7 @@ modtxt="$HDIR"/MODIFICATIONS
 cat <<EOF >> "$modtxt"
 dmrc-mate
 ---------
-- default session for user 'one' is Maté
+- default session for user 'one' is Mate
 
 
 EOF
