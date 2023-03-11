@@ -35,7 +35,7 @@ WORKINGDIR=$PWD/slapt-get
 EXCLUDE=.*-[0-9]+dl$,$exclude
 #SOURCE=http://salix.enialis.net/$srcdir/slackware-$ver/:OFFICIAL
 #SOURCE=http://salix.enialis.net/$srcdir/slackware-$ver/extra/:OFFICIAL
-SOURCE=http://download.salixos.org/$srcdir/$ver/:PREFERRED
+#SOURCE=http://download.salixos.org/$srcdir/$ver/:PREFERRED
 
 SOURCE=http://www.slackel.gr/repo/$srcdir/slackware-current/:OFFICIAL
 SOURCE=http://www.slackel.gr/repo/$srcdir/slackware-current/extra/:OFFICIAL
