@@ -37,14 +37,23 @@ EXCLUDE=.*-[0-9]+dl$,$exclude
 #SOURCE=http://salix.enialis.net/$srcdir/slackware-$ver/extra/:OFFICIAL
 #SOURCE=http://download.salixos.org/$srcdir/$ver/:PREFERRED
 
-SOURCE=http://www.slackel.gr/repo/$srcdir/slackware-current/:OFFICIAL
-SOURCE=http://www.slackel.gr/repo/$srcdir/slackware-current/extra/:OFFICIAL
-SOURCE=http://www.slackel.gr/repo/$srcdir/current/:CUSTOM
-SOURCE=http://sourceforge.net/projects/slackel/files/repo/$srcdir/current/:CUSTOM
+#SOURCE=http://www.slackel.gr/repo/$srcdir/slackware-current/:OFFICIAL
+#SOURCE=http://www.slackel.gr/repo/$srcdir/slackware-current/extra/:OFFICIAL
+#SOURCE=http://www.slackel.gr/repo/$srcdir/current/:CUSTOM
+#SOURCE=http://sourceforge.net/projects/slackel/files/repo/$srcdir/current/:CUSTOM
+
+SOURCE=http://slackware.uk/slackel/$srcdir/slackware-current/:OFFICIAL
+SOURCE=http://slackware.uk/slackel/$srcdir/slackware-current/extra/:OFFICIAL
+SOURCE=http://slackware.uk/slackel/$srcdir/current/:CUSTOM
 EOF
 ROOT=$PWD
 export ROOT
+mkdir -p var/lib/pkgtools/packages 
 mkdir -p var/log/packages
+#cd var/log
+#ln -sf ../lib/pkgtools/packages packages
+#cd $ROOT
+
 /usr/sbin/slapt-get -c $PWD/slapt-getrc -u
 nb=$(cat packages-* | wc -l)
 i=0
