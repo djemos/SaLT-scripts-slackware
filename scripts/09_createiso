@@ -64,6 +64,28 @@ cp /usr/share/syslinux/gptmbr.bin src/live/boot/syslinux/
 cp ../common/install_on_usb/install_on_usb.sh src/live/boot/
 cp ../common/install_on_usb/README_INSTALL_ON_USB.TXT src/live/boot/
 cp ../common/install_on_usb/make_new_kernel_module.sh src/live/boot/
+cp ../common/install_on_usb/make_new_kernel_generic_module.sh src/live/boot/
+cp ../common/install_on_usb/rufus-3.5.exe src/live/boot/
+
+#echo "Creating initrd-usb.gz for external usb stick, ssd"
+#moduleslist="loop:xhci-pci:ohci-pci:ehci-pci:xhci-hcd:uhci-hcd:ehci-hcd:mmc-core:mmc-block:sdhci:sdhci-pci:sdhci-acpi:usb-storage:hid:usbhid:i2c-hid:hid-generic:hid-apple:hid-asus:hid-cherry:hid-logitech:hid-logitech-dj:hid-logitech-hidpp:hid-lenovo:hid-microsoft:hid_multitouch:crc32c-intel:fuse"
+#kv=`ls -l /boot/vmlinuz | cut -f2 -d'>' | sed s/^[^0-9]*//`
+#TARGET=src/live
+#mount -o bind /proc $TARGET/proc
+#mount -o bind /sys $TARGET/sys
+#mount -o bind /dev $TARGET/dev
+#mount -o bind /tmp $TARGET/tmp
+#mount --bind /etc/resolv.conf $TARGET/etc/resolv.conf
+
+#chroot $TARGET mkinitrd -c -f ext4 -u -w 10 -o /boot/initrd-usb.gz  -r /dev/sdb1 -k $kv -m $moduleslist
+#chroot $TARGET rm -rf /boot/initrd-tree
+#umount -l $TARGET/proc
+#umount -l $TARGET/sys
+#umount -l $TARGET/dev
+#umount -l $TARGET/tmp
+#umount -l $TARGET/etc/resolv.conf
+#echo "end of initrd"
+
 build-slackware-live.sh --iso src/live "$startdir/$ISO_NAME"
 #unset ISOHYBRID_EFI_OPTS
 #if [[ `uname -m` == "x86_64" ]]; then
