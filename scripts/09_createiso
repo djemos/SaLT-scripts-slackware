@@ -18,47 +18,47 @@ CDNAME="${DISTRO}live$ARCH-${VER}"
 echo $CDNAME
 [ -n "$DEBUG" ] && DEBUG='-d 1' || DEBUG='-d 0'
 
-if [ `uname -m` != "x86_64" ]; then
-	answer="$(eval dialog --title \"Include i486 non-SMP kernel?\" \
-	--stdout \
-	--menu \"Do you want to include the i486 non-SMP kernel?\\n\
-	\\nYou have to include i486 non-SMP kernel and modules on packages-kernel \
-	before creating modules. If not then go back, create again kernel \
-	module and compress it.\" \
-	0 0 0 \
-	'NO' 'o' \
-	'Yes' 'o' )"
-	retval=$?
-	if [ $retval -eq 1 ] || [ $retval -eq 255 ]; then
-		exit 0
-	else
-		if [ "$answer" == "Yes" ]; then		   
-		kv=`ls -l /boot/vmlinuz | cut -f2 -d'>' | sed s/^[^0-9]*//`
-		kvnp=`echo ${kv: 0:-4}`
-		(
-			cd /boot
-			ln -sf vmlinuz-huge-${kvnp} vmlinuz
-		)
-		build-slackware-live.sh --init / src/live
-		mv src/live/boot/initrd.gz src/live/boot/nosmp.gz
-		mv src/live/boot/vmlinuz src/live/boot/vmlinuznp
-		(
-			cd /boot
-			ln -sf /boot/vmlinuz-huge-smp-$kv /boot/vmlinuz
-		)
-		else
-			mv menus menus.bak
-			cp -R ../64/menus menus
-		fi
-	fi	
-fi
+#if [ `uname -m` != "x86_64" ]; then
+#	answer="$(eval dialog --title \"Include i486 non-SMP kernel?\" \
+#	--stdout \
+#	--menu \"Do you want to include the i486 non-SMP kernel?\\n\
+#	\\nYou have to include i486 non-SMP kernel and modules on packages-kernel \
+#	before creating modules. If not then go back, create again kernel \
+#	module and compress it.\" \
+#	0 0 0 \
+#	'NO' 'o' \
+#	'Yes' 'o' )"
+#	retval=$?
+#	if [ $retval -eq 1 ] || [ $retval -eq 255 ]; then
+#		exit 0
+#	else
+#		if [ "$answer" == "Yes" ]; then		   
+#		kv=`ls -l /boot/vmlinuz | cut -f2 -d'>' | sed s/^[^0-9]*//`
+#		kvnp=`echo ${kv: 0:-4}`
+#		(
+#			cd /boot
+#			ln -sf vmlinuz-huge-${kvnp} vmlinuz
+#		)
+#		build-slackware-live.sh --init / src/live
+#		mv src/live/boot/initrd.gz src/live/boot/nosmp.gz
+#		mv src/live/boot/vmlinuz src/live/boot/vmlinuznp
+#		(
+#			cd /boot
+#			ln -sf /boot/vmlinuz-huge-smp-$kv /boot/vmlinuz
+#		)
+#		else
+#			mv menus menus.bak
+#			cp -R ../64/menus menus
+#		fi
+#	fi	
+#fi
 build-slackware-live.sh --init / src/live 
-if [ `uname -m` != "x86_64" ]; then
- if [ "$answer" != "Yes" ]; then
-	rm -rf menus
-	mv menus.bak menus
- fi
-fi
+#if [ `uname -m` != "x86_64" ]; then
+# if [ "$answer" != "Yes" ]; then
+#	rm -rf menus
+#	mv menus.bak menus
+# fi
+#fi
 cp /usr/share/syslinux/mbr.bin src/live/boot/syslinux/
 cp /usr/share/syslinux/gptmbr.bin src/live/boot/syslinux/
 cp ../common/install_on_usb/install_on_usb.sh src/live/boot/
