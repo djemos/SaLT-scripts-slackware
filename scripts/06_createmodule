@@ -82,7 +82,7 @@ while read m; do
       $cmdinstall "$file"
     done
     umount $ROOT/proc
-	umount $ROOT/sys
+    umount $ROOT/sys
     # dotnew
     if [ -e "$ROOT"/etc ]; then
       find "$ROOT"/etc -name '*.new'|xargs -i@ bash -c '(N="$1"; F="$(dirname $N)/$(basename $N .new)"; if [ -e $F ]; then rm $N; else mv $N $F; fi)' -- @
