@@ -72,17 +72,18 @@ while read m; do
       echo 'Remaining time (estimated) :' $(date -d "1970-01-01 UTC +$timeremain seconds" +%M:%S)
       echo ''
       file=$(find -L "$startdir"/PKGS -name "$p-*"|grep "$p-[^-]\+-[^-]\+-[^-]\+.t[gblx]z"|sort -V|head -n 1)
-      if [ $kernelmodule = $m ]; then
-		mount --bind /proc "$ROOT/proc"
-		mount --bind /sys "$ROOT/sys"
-	  else
-		umount $ROOT/proc
-		umount $ROOT/sys
-	  fi	
+    if [ $kernelmodule = $m ]; then
+          mount --bind /dev "$ROOT/dev"
+	  mount --bind /proc "$ROOT/proc"
+	  mount --bind /sys "$ROOT/sys"
+    fi
       $cmdinstall "$file"
     done
-    umount $ROOT/proc
-    umount $ROOT/sys
+    if [ $kernelmodule = $m ]; then
+         umount $ROOT/dev
+         umount $ROOT/proc
+	 umount $ROOT/sys
+	fi
     # dotnew
     if [ -e "$ROOT"/etc ]; then
       find "$ROOT"/etc -name '*.new'|xargs -i@ bash -c '(N="$1"; F="$(dirname $N)/$(basename $N .new)"; if [ -e $F ]; then rm $N; else mv $N $F; fi)' -- @
@@ -98,6 +99,9 @@ while read m; do
     fi
     # /var/log/setup
     if [ $lastmodule = $m ]; then
+       mount --bind /dev "$ROOT/dev"
+       mount --bind /proc "$ROOT/proc"
+       mount --bind /sys "$ROOT/sys"
        mount --bind /dev/pts "$ROOT/dev/pts"
        echo "set localtime to Etc/GMT"
        mkdir -p "$ROOT"/usr/share/zoneinfo/Etc
@@ -131,6 +135,9 @@ while read m; do
         rm ./dev/null
       )
       umount $ROOT/dev/pts
+      umount $ROOT/dev
+      umount $ROOT/proc
+      umount $ROOT/sys
     fi
     umount "$ROOT"
     # remove any fakely deleted files in RO branches, default suffix is _DELETED~
