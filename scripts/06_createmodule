@@ -83,7 +83,7 @@ while read m; do
          umount $ROOT/dev
          umount $ROOT/proc
 	 umount $ROOT/sys
-	fi
+    fi
     # dotnew
     if [ -e "$ROOT"/etc ]; then
       find "$ROOT"/etc -name '*.new'|xargs -i@ bash -c '(N="$1"; F="$(dirname $N)/$(basename $N .new)"; if [ -e $F ]; then rm $N; else mv $N $F; fi)' -- @
