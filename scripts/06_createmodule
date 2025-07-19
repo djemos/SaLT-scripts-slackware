@@ -1,6 +1,6 @@
 #!/bin/sh
 # vim: set syn=sh ft=sh et sw=2 sts=2 ts=2 tw=0:
-# Maintainer: JRD <jrd@salixos.org>
+# Maintainer: Dimitris Tzemos <dijemos@gmail.com>
 # Contributors: Shador <shador@salixos.org>, Akuna <akuna@salixos.org>
 # Licence: GPL v3+
 #
@@ -112,9 +112,9 @@ while read m; do
         cd "$ROOT"
         # /dev/null could be needed and will not be usable, so the trick is to delete it, and then delete the "deletion".
         rm ./dev/null
-        if [ -e var/log/setup/setup.htmlview ]; then
-          grep -q midori var/log/setup/setup.htmlview || sed -i 's/seamonkey/\0 midori/' var/log/setup/setup.htmlview
-        fi
+        #if [ -e var/log/setup/setup.htmlview ]; then
+        #  grep -q midori var/log/setup/setup.htmlview || sed -i 's/seamonkey/\0 midori/' var/log/setup/setup.htmlview
+        #fi
         #chmod a+r-x+X -R etc/gtk-2.0 etc/pango
         chmod a+r-x+X -R etc/gtk-2.0
         for install_script in var/log/setup/setup.*; do
