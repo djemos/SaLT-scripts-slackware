@@ -72,14 +72,14 @@ while read m; do
       echo 'Remaining time (estimated) :' $(date -d "1970-01-01 UTC +$timeremain seconds" +%M:%S)
       echo ''
       file=$(find -L "$startdir"/PKGS -name "$p-*"|grep "$p-[^-]\+-[^-]\+-[^-]\+.t[gblx]z"|sort -V|head -n 1)
-    if [ $kernelmodule = $m ]; then
+    if [[ $kernelmodule = $m ]]; then
           mount --bind /dev "$ROOT/dev"
 	  mount --bind /proc "$ROOT/proc"
 	  mount --bind /sys "$ROOT/sys"
     fi
       $cmdinstall "$file"
     done
-    if [ $kernelmodule = $m ]; then
+    if [[ $kernelmodule = $m ]]; then
          umount $ROOT/dev
          umount $ROOT/proc
 	 umount $ROOT/sys
