@@ -95,9 +95,9 @@ while read m; do
         tar -xOf "$inittabfile" etc/inittab.new | sed 's/^id:.:initdefault:/id:3:initdefault:/' > "$ROOT"/etc/inittab
       elif [ $nmodule -eq 1 ]; then
         sed -i 's/^id:.:initdefault:/id:4:initdefault:/' "$ROOT"/etc/inittab
-        if [[ -L "$ROOT"/etc/X11/xinit/xinitrc ]]; then
-	       unlink "$ROOT"/etc/X11/xinit/xinitrc
-	fi
+        #if [[ -L "$ROOT"/etc/X11/xinit/xinitrc ]]; then
+	#       unlink "$ROOT"/etc/X11/xinit/xinitrc
+	#fi
       fi
     fi
     # /var/log/setup
