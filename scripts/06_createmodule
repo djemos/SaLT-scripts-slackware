@@ -124,7 +124,7 @@ while read m; do
           script=$(basename $install_script)
           if [ -x var/log/setup/$script ]; then
             echo "$script" | grep -q 'setup\.\(liloconfig\|ll\.eliloconfig\|grubconfig\|mouse\|netconfig\|netsetup\|setconsolefont\|services\|timeconfig\|xwmconfig\|70\.install-kernel\|80\.make-bootdisk\)' && continue
-            echo "Running '/var/log/setup/setup.$script $ROOT'"
+            echo "Running '/var/log/setup/$script $ROOT'"
             ./var/log/setup/$script "$ROOT" 
           fi
         done
