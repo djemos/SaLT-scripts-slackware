@@ -1,4 +1,5 @@
 #!/bin/sh
+# For mate autologin comment the line 147 bellow #autologin-session=openbox
 startdir="$1"
 [ -n "$startdir" ] && [ -d "$startdir" ] || exit 1
 cd "$(dirname "$0")"
