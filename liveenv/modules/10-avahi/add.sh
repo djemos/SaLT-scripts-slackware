@@ -17,7 +17,7 @@ avahi
 EOF
 
 cat <<EOF >> "$doinst"
-chmod -x etc/rc.d/rc.avahi*
+chmod +x etc/rc.d/rc.avahi*
 
 EOF
 
