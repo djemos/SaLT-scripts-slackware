@@ -1,5 +1,5 @@
 #!/bin/sh
-# For mate autologin comment the line 147 bellow #autologin-session=openbox
+# For mate autologin replace the line 147 autologin-session=openbox bellow with autologin-session=mate
 startdir="$1"
 [ -n "$startdir" ] && [ -d "$startdir" ] || exit 1
 cd "$(dirname "$0")"
