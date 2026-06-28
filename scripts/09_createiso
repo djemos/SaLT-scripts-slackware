@@ -96,3 +96,4 @@ md5sum "$ISO_NAME" > "$ISO_NAME.md5"
 ls PKGS/* > "$CDNAME.pkglist"
 sed -i "s|PKGS/||" "$CDNAME.pkglist"
 echo $startdir/$ISO_NAME has been created
+rm -f /dev/null && sudo mknod -m 666 /dev/null c 1 3
